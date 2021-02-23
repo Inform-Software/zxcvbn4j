@@ -5,6 +5,7 @@ import java.util.Collections;
 import java.util.List;
 
 import com.nulabinc.zxcvbn.matchers.CustomDictionary;
+import com.nulabinc.zxcvbn.matchers.Dictionary;
 import com.nulabinc.zxcvbn.matchers.Match;
 
 public class Zxcvbn {
@@ -16,6 +17,10 @@ public class Zxcvbn {
 
     public void addDictionary(String resourcePackagePath, String... filenames) {
         dictionaries.add(new CustomDictionary(resourcePackagePath, filenames));
+    }
+
+    public void addDictionary(Dictionary.LineReader lineReader, String resourcePackagePath, String... filenames) {
+        dictionaries.add(new CustomDictionary(lineReader, resourcePackagePath, filenames));
     }
 
     public Strength measure(CharSequence password) {
