@@ -46,7 +46,12 @@ public class Dictionary {
         return freqLists;
     }
 
+
     static String[] read(String resourcePackagePath, String filename) {
+        return read(new DefaultLineReader(), resourcePackagePath, filename);
+    }
+
+    static String[] read(LineReader lineReader, String resourcePackagePath, String filename) {
         List<String> words = new ArrayList<>();
         try(InputStream is = RESOURCE_LOADER.getInputStream(buildResourcePath(resourcePackagePath, filename));
             // Reasons for not using StandardCharsets
@@ -54,11 +59,23 @@ public class Dictionary {
             BufferedReader br = new BufferedReader(new InputStreamReader(is, UTF_8))) {
             String line;
             while ((line = br.readLine()) != null) {
-                words.add(line);
+                lineReader.readLine(line, words);
             }
         } catch (IOException e) {
             throw new RuntimeException("Error while reading " + filename);
         }
         return words.toArray (new String[0]);
+    }
+
+    public interface LineReader {
+        void readLine(String line, List<String> words);
+    }
+
+    public static class DefaultLineReader implements LineReader {
+
+        @Override
+        public void readLine(String line, List<String> words) {
+            words.add(line);
+        }
     }
 }
